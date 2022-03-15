@@ -31,7 +31,7 @@ Usage
 Use the command line::
 
     > logs_plugin --help
-      usage: logs_plugin [-h] [-fl [Fileocation]] [-wd [Word to Check]] [-e [EXTRA_ARGS]] 
+      usage: logs_plugin [-h] [-fl [Fileocation]] [-wd [Word to Check]] [-ln [Lines number]][-e [EXTRA_ARGS]] 
 
         optional arguments:
                             -h, --help            show this help message and exit
@@ -39,6 +39,8 @@ Use the command line::
                                                     file to check
                             -wd [Word_to_check], --wordtocheck [Word to Check]
                                                     word to check
+                            -ln [lines_number], --linesnumber [Lines number]
+                                                    lines number
                             -e [EXTRA_ARGS], --extra_args [EXTRA_ARGS]
                                                     extra args to add to curl, see curl manpage
 
@@ -48,7 +50,7 @@ Example usage
 
 Example basic usage::
 
-    > logs_plugin  --fl '{filelocation}' --wd '{word_to_check}'
+    > logs_plugin  --fl '{filelocation}' --wd '{word_to_check}' -ln '{lines_number}'
 
 Nagios config
 =============
@@ -57,7 +59,7 @@ Example command::
 
     define command{
         command_name  logs_plugin
-        command_line  /usr/local/bin/logs_plugin --fl '$ARG1$' --wd $ARG2$ $ARG3$ 
+        command_line  /usr/local/bin/logs_plugin --fl '$ARG1$' --wd $ARG2$ -ln $ARG3$ $ARG4$ 
     } 
 
 With proxy defined
@@ -66,14 +68,14 @@ With proxy defined
 
     define command {
         command_name  logs_plugin
-        command_line  https_proxy=http://user:pass@PROXYIP:PORT /usr/local/bin/logs_plugin --fl '$ARG1$' --wd $ARG2$  $ARG5$}
+        command_line  https_proxy=http://user:pass@PROXYIP:PORT /usr/local/bin/logs_plugin --fl '$ARG1$' --wd $ARG2$  -ln $ARG3$ $ARG4$
 
 Example service::
 
     define service {
             host_name                       SERVERX
             service_description             service_name
-            check_command                   logs_plugin!c:\logs\log.txt!wordtocheck
+            check_command                   logs_plugin!c:\logs\log.txt!wordtocheck!N°
             use				                generic-service
             notes                           some useful notes
     }
@@ -83,7 +85,7 @@ With proxy defined:
     define service {
             host_name                       SERVERX
             service_description             service_name
-            check_command                   logs_plugin!c:\logs\log.txt!wordtocheck
+            check_command                   logs_plugin!c:\logs\log.txt!wordtocheck!N°
             use				                generic-service
             notes                           some useful notes} 
 
