@@ -1,5 +1,7 @@
 #
 # documentation:
+# https://www.geeksforgeeks.org/python-reading-last-n-lines-of-a-file/
+
 import requests
 import json
 import os
@@ -11,20 +13,21 @@ CRITICAL = 2
 UNKNOWN = 3
 
 class Logs:
-    def __init__(self, filelocation, word_to_check):
+    def __init__(self, filelocation, word_to_check, lines_n=20):
         
         #initial
         self.filelocation = filelocation
         self.word_to_check = word_to_check
+        self.lines_n = lines_n
     
     def check_logs(self):
 
         #variables
         retrcode = OK
         lines = []
-
+        fetched_tail_lines = []
         count = 0
-        N = 20
+        N = self.lines_n
         # buffer size
         bufsize = 8192
 
@@ -35,12 +38,12 @@ class Logs:
 
         with open(self.filelocation) as f:
 
-            for line in f:
-                
-                 # adjusting buffer size according to size of file
+            if bufsize > fsize:                                   
+                # adjusting buffer size according to size of file
                 bufsize = fsize-1
                 # list to store last N lines
                 fetched_lines = []
+                
 
                 while True:
                     iter += 1
@@ -50,13 +53,13 @@ class Logs:
                 
                     # storing each line in list upto end of file
                     fetched_lines.extend(f.readlines())                                       
-
+                    
                     # halting the program when size of list is equal or greater to the number of lines requested or when we reach end of file
                     if len(fetched_lines) >= N or f.tell() == 0:
+                        fetched_tail_lines = fetched_lines[-N:]
+                        break
 
-                        break                             
-        
-        for x in fetched_lines:
+        for x in fetched_tail_lines:
             if self.word_to_check not in x:
                 pass
             else:                

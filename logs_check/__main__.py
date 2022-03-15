@@ -42,6 +42,9 @@ def parse_args(args):
     parser.add_argument('-wd', '--word_to_check', dest='word_to_check', nargs='?', default=None, const=None,
                         help='word to check \n')
 
+    parser.add_argument('-ln', '--lines_number', dest='lines_number', nargs='?', default=20, type=int, const=None,
+                        help='lines number \n')
+                        
     parser.add_argument('-e', '--extra_args', dest='extra_args', nargs='?', default='', const=None,
                             help='extra args to add to curl, see curl manpage  \n')
 
@@ -68,7 +71,7 @@ def cli_execution(options):
     if not options.word_to_check:
             sys.exit('param word to check is resquired when using logs check ')
 
-    logs_obj = Logs(options.filelocation, options.word_to_check)	
+    logs_obj = Logs(options.filelocation, options.word_to_check, options.lines_number)	
 
     def check_data():
         # use new object class Logs
